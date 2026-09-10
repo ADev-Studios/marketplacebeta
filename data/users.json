@@ -1,0 +1,30 @@
+{
+  "demo_dev_01": {
+    "displayName": "Nova Labs",
+    "avatarUrl": "",
+    "bio": "Small studio crafting space adventures and neon racers.",
+    "joinedAt": "2025-06-01T00:00:00.000Z",
+    "followerCount": 1280
+  },
+  "demo_dev_02": {
+    "displayName": "Cryptbyte",
+    "avatarUrl": "",
+    "bio": "Roguelikes and tactical nightmares. Die often, learn faster.",
+    "joinedAt": "2025-08-12T00:00:00.000Z",
+    "followerCount": 890
+  },
+  "demo_dev_03": {
+    "displayName": "Moss & Moon",
+    "avatarUrl": "",
+    "bio": "Cozy and eerie narrative experiences.",
+    "joinedAt": "2025-10-03T00:00:00.000Z",
+    "followerCount": 640
+  },
+  "demo_dev_04": {
+    "displayName": "Party Pixel",
+    "avatarUrl": "",
+    "bio": "Local multiplayer party games for couch chaos.",
+    "joinedAt": "2025-11-18T00:00:00.000Z",
+    "followerCount": 420
+  }
+}

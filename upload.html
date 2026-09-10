@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Upload — ADev Marketplace</title>
+  <meta name="description" content="Publish a game on ADev Marketplace" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎮</text></svg>" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="index.html" class="logo">
+        <span class="logo-icon">◈</span>
+        <span class="logo-text">ADev</span>
+      </a>
+      <nav class="main-nav">
+        <a href="index.html">Home</a>
+        <a href="store.html">Store</a>
+        <a href="upload.html" id="nav-upload" class="hidden">Upload</a>
+      </nav>
+      <div class="header-actions">
+        <div id="auth-area" class="auth-area">
+          <button id="btn-login" class="btn btn-ghost">Sign In</button>
+          <button id="btn-signup" class="btn btn-primary">Sign Up</button>
+        </div>
+        <div id="user-menu" class="user-menu hidden">
+          <button id="user-avatar-btn" class="avatar-btn" title="Account">
+            <img id="header-avatar" src="" alt="" class="avatar-img" />
+            <span id="header-name" class="user-name"></span>
+          </button>
+          <div id="user-dropdown" class="dropdown hidden">
+            <a href="profile.html">My Profile</a>
+            <a href="settings.html">Settings</a>
+            <button id="btn-logout" class="dropdown-item">Sign Out</button>
+          </div>
+        </div>
+      </div>
+      <button id="mobile-toggle" class="mobile-toggle" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <main id="app" class="app-main">
+    <div class="loading-screen">
+      <div class="spinner"></div>
+      <p>Loading…</p>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <p>© 2026 ADev Marketplace. Built for indie creators.</p>
+      <p class="footer-note">Static site · Firebase · Cloudflare R2 · Electron launcher</p>
+    </div>
+  </footer>
+
+  <div id="auth-modal" class="modal hidden" role="dialog" aria-modal="true">
+    <div class="modal-backdrop" data-close-modal></div>
+    <div class="modal-content">
+      <button class="modal-close" data-close-modal aria-label="Close">×</button>
+      <div class="modal-tabs">
+        <button class="tab active" data-tab="login">Sign In</button>
+        <button class="tab" data-tab="signup">Sign Up</button>
+      </div>
+      <form id="form-login" class="auth-form">
+        <h2>Welcome back</h2>
+        <label>Email <input type="email" name="email" required autocomplete="email" /></label>
+        <label>Password <input type="password" name="password" required autocomplete="current-password" minlength="6" /></label>
+        <p id="login-error" class="form-error hidden"></p>
+        <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+        <div class="divider"><span>or</span></div>
+        <button type="button" id="btn-google-login" class="btn btn-google btn-block">Continue with Google</button>
+      </form>
+      <form id="form-signup" class="auth-form hidden">
+        <h2>Create account</h2>
+        <label>Display name <input type="text" name="displayName" required maxlength="40" autocomplete="nickname" /></label>
+        <label>Email <input type="email" name="email" required autocomplete="email" /></label>
+        <label>Password <input type="password" name="password" required autocomplete="new-password" minlength="6" /></label>
+        <p id="signup-error" class="form-error hidden"></p>
+        <button type="submit" class="btn btn-primary btn-block">Sign Up</button>
+        <div class="divider"><span>or</span></div>
+        <button type="button" id="btn-google-signup" class="btn btn-google btn-block">Continue with Google</button>
+      </form>
+    </div>
+  </div>
+  <div id="toast-container" class="toast-container"></div>
+
+  <script type="module">
+import { initShared, getQueryParam } from "./js/shared.js";
+import { renderUpload } from "./js/upload.js";
+await initShared();
+await renderUpload(getQueryParam("edit"));
+  </script>
+</body>
+</html>

@@ -1,0 +1,202 @@
+[
+  {
+    "id": "g_stellar_drift",
+    "title": "Stellar Drift",
+    "description": "Pilot a modular starship through procedurally generated nebulas. Collect scrap, upgrade systems, and survive the void. A relaxing exploration game with light combat and a haunting soundtrack.",
+    "genre": "Adventure",
+    "tags": ["space", "exploration", "procedural", "relaxing", "sci-fi"],
+    "price": 0,
+    "coverUrl": "https://images.unsplash.com/photo-1614728263952-84ea256f9679?w=800&q=80",
+    "screenshots": [
+      "https://images.unsplash.com/photo-1462331940025-496dfbfc7564?w=800&q=80",
+      "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&q=80"
+    ],
+    "fileUrl": "R2_BUCKET_URL/games/stellar-drift-1.2.0.zip",
+    "version": "1.2.0",
+    "executables": [
+      { "name": "Windows", "url": "R2_BUCKET_URL/games/stellar-drift-win.zip" },
+      { "name": "macOS", "url": "R2_BUCKET_URL/games/stellar-drift-mac.zip" }
+    ],
+    "authorUid": "demo_dev_01",
+    "authorName": "Nova Labs",
+    "downloads": 18420,
+    "downloadsLast7d": 890,
+    "downloadsLast30d": 3200,
+    "rating": 4.6,
+    "ratingCount": 412,
+    "createdAt": "2026-01-15T12:00:00.000Z",
+    "updatedAt": "2026-03-01T10:00:00.000Z"
+  },
+  {
+    "id": "g_pixel_tomb",
+    "title": "Pixel Tomb",
+    "description": "A brutal 8-bit roguelike set in an endless crypt. Permadeath, 40+ weapons, and bosses that learn from your mistakes. How deep can you go?",
+    "genre": "RPG",
+    "tags": ["roguelike", "pixel-art", "permadeath", "dungeon", "hardcore"],
+    "price": 9.99,
+    "coverUrl": "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=800&q=80",
+    "screenshots": [
+      "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=800&q=80"
+    ],
+    "fileUrl": "R2_BUCKET_URL/games/pixel-tomb-2.0.1.zip",
+    "version": "2.0.1",
+    "executables": [],
+    "authorUid": "demo_dev_02",
+    "authorName": "Cryptbyte",
+    "downloads": 9200,
+    "downloadsLast7d": 410,
+    "downloadsLast30d": 1800,
+    "rating": 4.8,
+    "ratingCount": 290,
+    "createdAt": "2025-11-20T08:00:00.000Z",
+    "updatedAt": "2026-02-14T16:00:00.000Z"
+  },
+  {
+    "id": "g_neon_rush",
+    "title": "Neon Rush",
+    "description": "Arcade racing on holographic tracks. Drift through cyberpunk cities, unlock cars, and climb the global leaderboard. Controller recommended.",
+    "genre": "Racing",
+    "tags": ["racing", "arcade", "cyberpunk", "multiplayer", "leaderboard"],
+    "price": 14.99,
+    "coverUrl": "https://images.unsplash.com/photo-1511882150382-421056c89033?w=800&q=80",
+    "screenshots": [
+      "https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?w=800&q=80",
+      "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=800&q=80"
+    ],
+    "fileUrl": "R2_BUCKET_URL/games/neon-rush-1.5.0.zip",
+    "version": "1.5.0",
+    "executables": [
+      { "name": "Windows", "url": "R2_BUCKET_URL/games/neon-rush-win.zip" }
+    ],
+    "authorUid": "demo_dev_01",
+    "authorName": "Nova Labs",
+    "downloads": 22100,
+    "downloadsLast7d": 1200,
+    "downloadsLast30d": 5100,
+    "rating": 4.4,
+    "ratingCount": 680,
+    "createdAt": "2025-09-01T14:00:00.000Z",
+    "updatedAt": "2026-01-20T09:00:00.000Z"
+  },
+  {
+    "id": "g_garden_ghosts",
+    "title": "Garden of Ghosts",
+    "description": "Tend a haunted greenhouse. Each plant has a spirit with its own needs and secrets. A cozy narrative sim about grief, growth, and green thumbs.",
+    "genre": "Simulation",
+    "tags": ["cozy", "narrative", "gardening", "ghosts", "story-rich"],
+    "price": 12.99,
+    "coverUrl": "https://images.unsplash.com/photo-1466692476866-aef614ec2d73?w=800&q=80",
+    "screenshots": [
+      "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=800&q=80"
+    ],
+    "fileUrl": "R2_BUCKET_URL/games/garden-ghosts-1.0.3.zip",
+    "version": "1.0.3",
+    "executables": [],
+    "authorUid": "demo_dev_03",
+    "authorName": "Moss & Moon",
+    "downloads": 5600,
+    "downloadsLast7d": 320,
+    "downloadsLast30d": 1400,
+    "rating": 4.9,
+    "ratingCount": 210,
+    "createdAt": "2026-02-10T11:00:00.000Z",
+    "updatedAt": "2026-03-05T08:00:00.000Z"
+  },
+  {
+    "id": "g_void_protocol",
+    "title": "Void Protocol",
+    "description": "Tactical squad combat in zero-g stations. Plan every move on a grid, manage oxygen, and extract before the station collapses. Turn-based intensity.",
+    "genre": "Strategy",
+    "tags": ["tactics", "turn-based", "sci-fi", "squad", "hardcore"],
+    "price": 19.99,
+    "coverUrl": "https://images.unsplash.com/photo-1506318137071-a8e063b4bec0?w=800&q=80",
+    "screenshots": [
+      "https://images.unsplash.com/photo-1446776653964-20c1d3a81b06?w=800&q=80"
+    ],
+    "fileUrl": "R2_BUCKET_URL/games/void-protocol-0.9.5.zip",
+    "version": "0.9.5",
+    "executables": [],
+    "authorUid": "demo_dev_02",
+    "authorName": "Cryptbyte",
+    "downloads": 3100,
+    "downloadsLast7d": 180,
+    "downloadsLast30d": 900,
+    "rating": 4.2,
+    "ratingCount": 95,
+    "createdAt": "2026-03-01T17:00:00.000Z",
+    "updatedAt": "2026-03-18T12:00:00.000Z"
+  },
+  {
+    "id": "g_block_bash",
+    "title": "Block Bash Arena",
+    "description": "Local multiplayer mayhem. Smash blocks, steal power-ups, and knock friends off the arena. 2–4 players, one keyboard or multiple controllers.",
+    "genre": "Action",
+    "tags": ["local-multiplayer", "party", "physics", "casual", "controller"],
+    "price": 0,
+    "coverUrl": "https://images.unsplash.com/photo-1552820728-8b83bb6b773f?w=800&q=80",
+    "screenshots": [],
+    "fileUrl": "R2_BUCKET_URL/games/block-bash-1.1.0.zip",
+    "version": "1.1.0",
+    "executables": [],
+    "authorUid": "demo_dev_04",
+    "authorName": "Party Pixel",
+    "downloads": 14500,
+    "downloadsLast7d": 760,
+    "downloadsLast30d": 2900,
+    "rating": 4.3,
+    "ratingCount": 340,
+    "createdAt": "2025-12-05T10:00:00.000Z",
+    "updatedAt": "2026-02-28T15:00:00.000Z"
+  },
+  {
+    "id": "g_echo_labyrinth",
+    "title": "Echo Labyrinth",
+    "description": "A first-person puzzle horror where sound is your only map. Navigate pitch-black corridors using echolocation. Headphones required.",
+    "genre": "Horror",
+    "tags": ["horror", "puzzle", "audio", "first-person", "atmospheric"],
+    "price": 7.99,
+    "coverUrl": "https://images.unsplash.com/photo-1509248961158-e54f6934749c?w=800&q=80",
+    "screenshots": [
+      "https://images.unsplash.com/photo-1478760329108-5c3ed9d495a0?w=800&q=80"
+    ],
+    "fileUrl": "R2_BUCKET_URL/games/echo-labyrinth-1.0.0.zip",
+    "version": "1.0.0",
+    "executables": [],
+    "authorUid": "demo_dev_03",
+    "authorName": "Moss & Moon",
+    "downloads": 4200,
+    "downloadsLast7d": 250,
+    "downloadsLast30d": 1100,
+    "rating": 4.7,
+    "ratingCount": 156,
+    "createdAt": "2026-02-22T09:00:00.000Z",
+    "updatedAt": "2026-02-22T09:00:00.000Z"
+  },
+  {
+    "id": "g_sky_forge",
+    "title": "Skyforge Legends",
+    "description": "Build floating islands, craft mythical weapons, and defend against sky pirates. Creative sandbox meets light strategy.",
+    "genre": "Simulation",
+    "tags": ["building", "sandbox", "crafting", "fantasy", "creative"],
+    "price": 24.99,
+    "coverUrl": "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=800&q=80",
+    "screenshots": [
+      "https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=800&q=80"
+    ],
+    "fileUrl": "R2_BUCKET_URL/games/skyforge-0.8.2.zip",
+    "version": "0.8.2",
+    "executables": [
+      { "name": "Windows", "url": "R2_BUCKET_URL/games/skyforge-win.zip" },
+      { "name": "Linux", "url": "R2_BUCKET_URL/games/skyforge-linux.zip" }
+    ],
+    "authorUid": "demo_dev_01",
+    "authorName": "Nova Labs",
+    "downloads": 7800,
+    "downloadsLast7d": 520,
+    "downloadsLast30d": 2100,
+    "rating": 4.1,
+    "ratingCount": 188,
+    "createdAt": "2026-01-28T13:00:00.000Z",
+    "updatedAt": "2026-03-12T11:00:00.000Z"
+  }
+]
