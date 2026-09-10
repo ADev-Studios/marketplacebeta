@@ -565,6 +565,58 @@ export async function updateUserDoc(uid, data) {
   await updateDoc(doc(db, "users", uid), data);
 }
 
+// ---------- Creator stats (for follower-weighted ranking) ----------
+
+const CREATOR_CACHE_TTL_MS = 5 * 60 * 1000;
+let _creatorCache = { at: 0, data: null };
+
+/**
+ * Returns { [uid]: followerCount } for every user with a profile.
+ * Cached 5 min. Used by algorithms.js to bias Featured toward proven
+ * creators (bounded so new creators stay visible).
+ */
+export async function getCreatorFollowerCounts({ force = false } = {}) {
+  const now = Date.now();
+  if (
+    !force &&
+    _creatorCache.data &&
+    now - _creatorCache.at < CREATOR_CACHE_TTL_MS
+  ) {
+    return _creatorCache.data;
+  }
+
+  const db = getDb();
+  if (!db) {
+    await loadLocalData();
+    const map = {};
+    for (const [uid, u] of Object.entries(localUsers || {})) {
+      map[uid] = Number(u?.followerCount) || 0;
+    }
+    _creatorCache = { at: now, data: map };
+    return map;
+  }
+
+  try {
+    const snap = await getDocs(collection(db, "users"));
+    const map = {};
+    snap.forEach((d) => {
+      const u = d.data() || {};
+      map[d.id] = Number(u.followerCount) || 0;
+    });
+    _creatorCache = { at: now, data: map };
+    return map;
+  } catch (err) {
+    console.warn("[data] getCreatorFollowerCounts failed:", err.message);
+    _creatorCache = { at: now, data: {} };
+    return {};
+  }
+}
+
+/** Manually invalidate the creator cache (called by follow/unfollow). */
+export function invalidateCreatorCache() {
+  _creatorCache = { at: 0, data: null };
+}
+
 // ---------- Follows ----------
 
 export async function getFollowing(uid) {
@@ -598,6 +650,7 @@ export async function followUser(targetUid) {
   try {
     await updateDoc(doc(db, "users", targetUid), { followerCount: increment(1) });
   } catch {}
+  invalidateCreatorCache();
 }
 
 export async function unfollowUser(targetUid) {
@@ -610,6 +663,7 @@ export async function unfollowUser(targetUid) {
   try {
     await updateDoc(doc(db, "users", targetUid), { followerCount: increment(-1) });
   } catch {}
+  invalidateCreatorCache();
 }
 
 export async function isFollowing(targetUid) {
