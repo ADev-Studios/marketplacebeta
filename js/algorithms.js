@@ -951,6 +951,7 @@ export const GENRES = [
   "Party",
   "Narrative",
   "Calm",
+  "Multiplayer",
   "Indie",
   "Other",
 ];
