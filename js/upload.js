@@ -88,7 +88,7 @@ export async function renderUpload(editId = null) {
         <p class="form-hint">0 = Free</p>
       </div>
       <div class="form-group">
-        <label for="coverUrl">Cover image URL *</label>
+        <label for="coverUrl">Cover image URL (You host it) *</label>
         <input id="coverUrl" name="coverUrl" type="url" required placeholder="https://…"
           value="${escapeHtml(existing?.coverUrl || "")}" />
       </div>
@@ -108,7 +108,7 @@ export async function renderUpload(editId = null) {
         <button type="button" class="btn btn-ghost btn-sm" id="btn-add-shot" style="margin-top:0.5rem">+ Add screenshot</button>
       </div>
       <div class="form-group">
-        <label for="fileUrl">Main game file URL * (R2 / zip preferred)</label>
+        <label for="fileUrl">Main game file URL (You host it) * (R2 / zip preferred)</label>
         <input id="fileUrl" name="fileUrl" type="url" required
           placeholder="${R2_BUCKET_URL}/games/your-game.zip"
           value="${escapeHtml(existing?.fileUrl || "")}" />
@@ -120,7 +120,7 @@ export async function renderUpload(editId = null) {
           value="${escapeHtml(existing?.version || "1.0.0")}" />
       </div>
       <div class="form-group">
-        <label>Additional executables / platforms (optional)</label>
+        <label>Additional executables / platforms (optional, you host it)</label>
         <div id="exec-list">
           ${execs
             .map(
