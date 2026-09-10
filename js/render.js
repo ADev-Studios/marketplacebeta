@@ -13,6 +13,7 @@ import {
   deleteGame,
   getRatingsForGame,
   getAllRatings,
+  getCreatorFollowerCounts,
   submitRating,
   deleteMyRating,
 } from "./data.js";
@@ -24,6 +25,7 @@ import {
   getFeatured,
   getBecauseYouViewed,
   getPersonalizedFeed,
+  getRisingCreators,
   buildReviewsMap,
   trackView,
   trackSearch,
@@ -397,25 +399,32 @@ export async function renderHome() {
       <h2 class="section-title">Recently Added</h2>
       <div class="card-grid" id="recent-grid">${skeletonCards(4)}</div>
     </section>
+    <section class="section" id="rising-section" hidden>
+      <h2 class="section-title">Rising Creators</h2>
+      <div class="card-grid" id="rising-grid"></div>
+    </section>
     <section class="section" id="byv-section" hidden>
       <h2 class="section-title">Because You Viewed</h2>
       <div class="card-grid" id="byv-grid"></div>
     </section>`;
 
   try {
-    // Fetch games and all ratings in parallel so feed ranking gets the
-    // recency-weighted review data. windowDays: 0 skips the Firestore index
-    // requirement by reading the whole collection (fine for small catalogs).
-    const [games, ratings] = await Promise.all([
+    // Fetch games, all ratings, and follower counts in parallel so feed
+    // ranking gets recency-weighted reviews AND the creator-follower signal.
+    // windowDays: 0 skips the Firestore index requirement by reading the
+    // whole ratings collection (fine for small catalogs).
+    const [games, ratings, followerCounts] = await Promise.all([
       getAllGames(),
       getAllRatings({ windowDays: 0 }).catch(() => []),
+      getCreatorFollowerCounts().catch(() => ({})),
     ]);
     const reviewsByGameId = buildReviewsMap(ratings);
 
-    const forYou = getPersonalizedFeed(games, 12, { reviewsByGameId });
-    const featured = getFeatured(games, 4, { reviewsByGameId });
+    const forYou = getPersonalizedFeed(games, 12, { reviewsByGameId, followerCounts });
+    const featured = getFeatured(games, 4, { reviewsByGameId, followerCounts });
     const trending = getTrending(games, 8, { reviewsByGameId });
     const recent = getRecentlyAdded(games, 8);
+    const rising = getRisingCreators(games, 4, { reviewsByGameId, followerCounts });
     const byv = getBecauseYouViewed(games, 6);
 
     const setGrid = (id, list) => {
@@ -433,6 +442,11 @@ export async function renderHome() {
     setGrid("featured-grid", featured);
     setGrid("trending-grid", trending);
     setGrid("recent-grid", recent);
+
+    if (rising.length) {
+      document.getElementById("rising-section").hidden = false;
+      setGrid("rising-grid", rising);
+    }
 
     if (byv.length) {
       document.getElementById("byv-section").hidden = false;

@@ -25,6 +25,10 @@
  *   { [gameId]: review[] }
  * If you don't pass it (feed endpoints usually don't), we fall back to
  * the aggregate fields already denormalized on the game doc.
+ *
+ * Follower counts: pass `{ followerCounts: { [uid]: number } }` to any
+ * of the feed functions. Only Featured / Personalized / Rising use them.
+ * Trending and Recently Added intentionally ignore followers.
  */
 
 // ---------- Config ----------
@@ -47,6 +51,7 @@ const BAYES_PRIOR_WEIGHT = 10;
 const RATING_HALF_LIFE_DAYS = 180;
 
 const DEFAULT_RECENT_WINDOW_DAYS = 30;
+const DEFAULT_MAX_FOLLOWERS_RISING = 50;
 
 // ---------- Small helpers ----------
 
@@ -177,7 +182,7 @@ function bayesRating(g, reviewsByGameId) {
   );
 }
 
-// ---------- New-game boost ----------
+// ---------- Ranking boosts ----------
 
 function newGameBoost(g) {
   const at = time(g.createdAt);
@@ -188,6 +193,27 @@ function newGameBoost(g) {
   if (ageDays < 7) return 1.3;
   if (ageDays < 14) return 1.15;
   return 1;
+}
+
+/**
+ * Bounded log-scaled boost from a creator's follower count.
+ * Returns 1.0 for unknown/zero-follower creators, maxes at 1.5.
+ *
+ *   followers:   0  -> 1.00
+ *               10  -> 1.18
+ *              100  -> 1.34
+ *             1000  -> 1.50
+ *           10000+  -> 1.50 (capped)
+ *
+ * The cap is intentional: keeps new creators visible and avoids a
+ * rich-get-richer feedback loop where early popular creators dominate
+ * every featured slot forever.
+ */
+function creatorBoost(game, followerCounts) {
+  if (!followerCounts) return 1;
+  const f = num(followerCounts[game.authorUid]);
+  if (f <= 0) return 1;
+  return 1 + Math.min(0.5, Math.log10(f + 1) * 0.17);
 }
 
 // ---------- Storage helpers ----------
@@ -506,7 +532,7 @@ export function jaccard(tagsA = [], tagsB = []) {
  * Blends:
  *   - tag Jaccard
  *   - genre bonus
- *   - per-user co-view boost (local CF, Tier 2 #7)
+ *   - per-user co-view boost (local CF)
  *   - small quality tie-breaker
  *   - MMR diversification
  */
@@ -551,6 +577,10 @@ export function getRecommendations(games, targetGame, topN = 6, options = {}) {
 
 // ---------- Feed-style curation ----------
 
+/**
+ * Trending: pure momentum. Intentionally does NOT use follower counts —
+ * trending should reflect "what's hot right now", not creator fame.
+ */
 export function getTrending(games, topN = 10, options = {}) {
   const list = games || [];
   const lambda = options.lambda ?? 0.75;
@@ -581,6 +611,10 @@ export function getTrending(games, topN = 10, options = {}) {
   return mmrDiversify(pool, topN, lambda);
 }
 
+/**
+ * Recently added: chronological, restricted to a recent window.
+ * Intentionally does NOT use follower counts.
+ */
 export function getRecentlyAdded(games, topN = 8, options = {}) {
   const list = games || [];
   const windowDays = options.windowDays ?? DEFAULT_RECENT_WINDOW_DAYS;
@@ -598,21 +632,31 @@ export function getRecentlyAdded(games, topN = 8, options = {}) {
   return mmrDiversify(scored, topN, lambda);
 }
 
-function featuredScore(g, reviewsByGameId) {
+function featuredScore(g, reviewsByGameId, followerCounts) {
   const rating = bayesRating(g, reviewsByGameId);
-  return (rating * 10 + Math.log10(num(g.downloads) + 1) * 5) * newGameBoost(g);
+  const base = rating * 10 + Math.log10(num(g.downloads) + 1) * 5;
+  return base * newGameBoost(g) * creatorBoost(g, followerCounts);
 }
 
+/**
+ * Featured: quality + new-game boost + bounded creator follower boost.
+ * Day-seeded jitter so the row rotates; MMR diversification so it's not
+ * all one genre.
+ */
 export function getFeatured(games, topN = 4, options = {}) {
   const list = games || [];
   const seed = options.seed ?? daySeed();
   const lambda = options.lambda ?? 0.75;
   const reviewsByGameId = options.reviewsByGameId;
+  const followerCounts = options.followerCounts;
 
   if (list.length === 0) return [];
 
   const scored = list
-    .map((g) => ({ game: g, score: featuredScore(g, reviewsByGameId) }))
+    .map((g) => ({
+      game: g,
+      score: featuredScore(g, reviewsByGameId, followerCounts),
+    }))
     .sort((a, b) => b.score - a.score);
 
   const poolSize = Math.min(scored.length, Math.max(topN * 3, topN));
@@ -624,6 +668,46 @@ export function getFeatured(games, topN = 4, options = {}) {
     .sort((a, b) => b.score - a.score);
 
   return mmrDiversify(jittered, topN, lambda);
+}
+
+/**
+ * Rising Creators: games from low-follower creators with some engagement
+ * signal. Gives new/small creators a guaranteed discovery slot without
+ * being charity — the game still has to show some quality (rating or
+ * downloads). Games with zero of both are excluded.
+ *
+ *   options.maxFollowers   default 50
+ *   options.reviewsByGameId
+ *   options.followerCounts
+ *   options.lambda         default 0.75
+ */
+export function getRisingCreators(games, topN = 4, options = {}) {
+  const list = games || [];
+  const followerCounts = options.followerCounts || {};
+  const reviewsByGameId = options.reviewsByGameId;
+  const lambda = options.lambda ?? 0.75;
+  const maxFollowers = options.maxFollowers ?? DEFAULT_MAX_FOLLOWERS_RISING;
+
+  const eligible = list.filter((g) => {
+    const f = num(followerCounts[g.authorUid]);
+    return f <= maxFollowers;
+  });
+  if (!eligible.length) return [];
+
+  const scored = eligible
+    .map((g) => {
+      const rating = bayesRating(g, reviewsByGameId);
+      const downloads = num(g.downloads);
+      // Require a real signal: a fresh upload with zero activity isn't "rising"
+      if (downloads <= 0 && rating <= 0) return null;
+      const score =
+        (rating * 10 + Math.log10(downloads + 1) * 5) * newGameBoost(g);
+      return { game: g, score };
+    })
+    .filter(Boolean)
+    .sort((a, b) => b.score - a.score);
+
+  return mmrDiversify(scored, topN, lambda);
 }
 
 // ---------- View history (localStorage) ----------
@@ -749,6 +833,7 @@ export function getPersonalizedFeed(games, topN = 12, options = {}) {
   const exploration = options.exploration ?? 0.1;
   const seed = options.seed ?? daySeed();
   const reviewsByGameId = options.reviewsByGameId;
+  const followerCounts = options.followerCounts;
 
   const viewed = getViewedIds();
   const hasHistory = viewed.length > 0;
@@ -767,7 +852,10 @@ export function getPersonalizedFeed(games, topN = 12, options = {}) {
   };
 
   addAll(getTrending(list, 40, { lambda, reviewsByGameId }), 1.0);
-  addAll(getFeatured(list, 20, { lambda, seed, reviewsByGameId }), 0.8);
+  addAll(
+    getFeatured(list, 20, { lambda, seed, reviewsByGameId, followerCounts }),
+    0.8
+  );
   addAll(getRecentlyAdded(list, 20, { lambda }), 0.6);
 
   if (hasHistory || sessionHasSignals) {
@@ -865,4 +953,4 @@ export const GENRES = [
   "Calm",
   "Indie",
   "Other",
-];   
+];
