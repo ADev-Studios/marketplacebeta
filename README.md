@@ -1,8 +1,8 @@
-# ADev Marketplace
+# ADev Marketplace (Beta)
 
 Static multi-page indie game marketplace. Dark theme, plain HTML/CSS/JS, Firebase Auth + Firestore, Cloudflare R2 for game files, Electron launcher deep links.
 
-**Stack:** HTML pages (no SPA hash router) · GitHub Pages · Firebase · R2 · Electron (launcher separate)
+**Stack:** HTML · GitHub Pages · Firebase
 
 ---
 
