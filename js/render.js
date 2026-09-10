@@ -12,6 +12,7 @@ import {
   incrementDownloads,
   deleteGame,
   getRatingsForGame,
+  getAllRatings,
   submitRating,
   deleteMyRating,
 } from "./data.js";
@@ -22,7 +23,11 @@ import {
   getRecentlyAdded,
   getFeatured,
   getBecauseYouViewed,
+  getPersonalizedFeed,
+  buildReviewsMap,
   trackView,
+  trackSearch,
+  trackGenreFilter,
   filterGames,
   GENRES,
 } from "./algorithms.js";
@@ -376,6 +381,10 @@ export async function renderHome() {
       <h1>Discover Games</h1>
       <p>Indie titles on ADev Marketplace</p>
     </div>
+    <section class="section" id="foryou-section">
+      <h2 class="section-title">For You</h2>
+      <div class="card-grid" id="foryou-grid">${skeletonCards(8)}</div>
+    </section>
     <section class="section">
       <h2 class="section-title">Featured</h2>
       <div class="card-grid" id="featured-grid">${skeletonCards(4)}</div>
@@ -394,9 +403,18 @@ export async function renderHome() {
     </section>`;
 
   try {
-    const games = await getAllGames();
-    const featured = getFeatured(games, 4);
-    const trending = getTrending(games, 8);
+    // Fetch games and all ratings in parallel so feed ranking gets the
+    // recency-weighted review data. windowDays: 0 skips the Firestore index
+    // requirement by reading the whole collection (fine for small catalogs).
+    const [games, ratings] = await Promise.all([
+      getAllGames(),
+      getAllRatings({ windowDays: 0 }).catch(() => []),
+    ]);
+    const reviewsByGameId = buildReviewsMap(ratings);
+
+    const forYou = getPersonalizedFeed(games, 12, { reviewsByGameId });
+    const featured = getFeatured(games, 4, { reviewsByGameId });
+    const trending = getTrending(games, 8, { reviewsByGameId });
     const recent = getRecentlyAdded(games, 8);
     const byv = getBecauseYouViewed(games, 6);
 
@@ -411,6 +429,7 @@ export async function renderHome() {
       bindCardClicks(grid);
     };
 
+    setGrid("foryou-grid", forYou);
     setGrid("featured-grid", featured);
     setGrid("trending-grid", trending);
     setGrid("recent-grid", recent);
@@ -502,6 +521,18 @@ export async function renderStore() {
     const node = document.getElementById(id);
     node.addEventListener(id === "store-search" ? "input" : "change", apply);
   });
+
+  // Session signals: track committed searches and genre filter changes so
+  // getBecauseYouViewed() / getPersonalizedFeed() can use them in-session.
+  // 'change' fires on blur/Enter, so we don't spam a signal per keystroke.
+  document.getElementById("store-search").addEventListener("change", (e) => {
+    const v = e.target.value.trim();
+    if (v) trackSearch(v);
+  });
+  document.getElementById("filter-genre").addEventListener("change", (e) => {
+    trackGenreFilter(e.target.value);
+  });
+
   apply();
 }
 

@@ -295,6 +295,67 @@ export async function getRatingsForGame(gameId) {
   }
 }
 
+// ---------- All ratings (for feed ranking) ----------
+
+const RATINGS_CACHE_TTL_MS = 5 * 60 * 1000;
+let _allRatingsCache = { at: 0, data: null };
+
+/**
+ * Fetch all ratings once, cached for 5 minutes.
+ * Use this to feed `reviewsByGameId` into algorithms.js so feed ranking can
+ * do recency-weighted ratings. Falls back to local storage in dev.
+ *
+ * By default only fetches reviews from the last 90 days to keep payloads
+ * small. Pass { windowDays: 0 } for the entire collection, or
+ * { windowDays: 30 } for tighter recency.
+ */
+export async function getAllRatings({ force = false, windowDays = 90 } = {}) {
+  const now = Date.now();
+  if (
+    !force &&
+    _allRatingsCache.data &&
+    now - _allRatingsCache.at < RATINGS_CACHE_TTL_MS
+  ) {
+    return _allRatingsCache.data;
+  }
+
+  const db = getDb();
+  if (!db) {
+    const data = loadLocalRatings();
+    _allRatingsCache = { at: now, data };
+    return data;
+  }
+
+  try {
+    let q;
+    if (windowDays && windowDays > 0) {
+      const cutoff = new Date(now - windowDays * 86400000);
+      q = query(
+        collection(db, "ratings"),
+        where("updatedAt", ">=", cutoff)
+      );
+    } else {
+      q = collection(db, "ratings");
+    }
+
+    const snap = await getDocs(q);
+    const data = [];
+    snap.forEach((d) => data.push({ id: d.id, ...d.data() }));
+    _allRatingsCache = { at: now, data };
+    return data;
+  } catch (err) {
+    console.warn("[data] getAllRatings failed, using local:", err.message);
+    const data = loadLocalRatings();
+    _allRatingsCache = { at: now, data };
+    return data;
+  }
+}
+
+/** Manually invalidate the ratings cache (call after submitRating / deleteMyRating). */
+export function invalidateRatingsCache() {
+  _allRatingsCache = { at: 0, data: null };
+}
+
 export async function getMyRating(gameId) {
   const user = getCurrentUser();
   if (!user) return null;
@@ -345,6 +406,7 @@ export async function submitRating(gameId, stars, review = "") {
         sessionStorage.setItem("nexus_local_games", JSON.stringify(localGames));
       } catch {}
     }
+    invalidateRatingsCache();
     return row;
   }
 
@@ -396,6 +458,8 @@ export async function submitRating(gameId, stars, review = "") {
     });
   });
 
+  invalidateRatingsCache();
+
   return {
     gameId,
     uid: user.uid,
@@ -417,6 +481,7 @@ export async function deleteMyRating(gameId) {
     saveLocalRatings(list);
     const g = localGames.find((x) => x.id === gameId);
     if (g) applyAggregates(g, list.filter((r) => r.gameId === gameId));
+    invalidateRatingsCache();
     return;
   }
 
@@ -448,6 +513,8 @@ export async function deleteMyRating(gameId) {
       });
     }
   });
+
+  invalidateRatingsCache();
 }
 
 // ---------- Users ----------
