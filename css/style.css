@@ -83,7 +83,7 @@ button, input, select, textarea {
   display: inline-block;
   width: 32px;
   height: 32px;
-  background-image: url('assets/favicon.png');
+  background-image: url('../assets/favicon.png');
   background-size: contain;   /* scales the 751×748 image to fit 32×32 proportionally */
   background-repeat: no-repeat;
   background-position: center;
