@@ -1,4 +1,4 @@
-/* ===== Nexus Games — Dark Theme ===== */
+/* ===== ADev Studio's Games — Dark Theme ===== */
 :root {
   --bg: #0f0f0f;
   --bg-elevated: #16161f;
@@ -78,6 +78,16 @@ button, input, select, textarea {
 }
 .logo:hover { color: var(--accent); }
 .logo-icon { color: var(--accent); font-size: 1.4rem; }
+.logo-icon::before {
+  content: "";
+  display: inline-block;
+  width: 32px;
+  height: 32px;
+  background-image: url('assets/favicon.png');
+  background-size: contain;   /* scales the 751×748 image to fit 32×32 proportionally */
+  background-repeat: no-repeat;
+  background-position: center;
+}
 
 .main-nav {
   display: flex;
