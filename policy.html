@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Policy — ADev Marketplace</title>
+  <meta name="description" content="Marketplace and launcher policy for ADev Marketplace" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="icon" type="image/png" href="assets/favicon.png" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="index.html" class="logo">
+        <span class="logo-icon"></span>
+        <span class="logo-text">ADev Marketplace</span>
+      </a>
+      <nav class="main-nav">
+        <a href="index.html">Home</a>
+        <a href="store.html">Store</a>
+        <a href="upload.html" id="nav-upload" class="hidden">Upload</a>
+      </nav>
+      <div class="header-actions">
+        <div id="auth-area" class="auth-area">
+          <button id="btn-login" class="btn btn-ghost">Sign In</button>
+          <button id="btn-signup" class="btn btn-primary">Sign Up</button>
+        </div>
+        <div id="user-menu" class="user-menu hidden">
+          <button id="user-avatar-btn" class="avatar-btn" title="Account">
+            <img id="header-avatar" src="" alt="" class="avatar-img" />
+            <span id="header-name" class="user-name"></span>
+          </button>
+          <div id="user-dropdown" class="dropdown hidden">
+            <a href="profile.html">My Profile</a>
+            <a href="settings.html">Settings</a>
+            <button id="btn-logout" class="dropdown-item">Sign Out</button>
+          </div>
+        </div>
+      </div>
+      <button id="mobile-toggle" class="mobile-toggle" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <main id="app" class="app-main">
+    <div class="page-header">
+      <h1>Marketplace Policy</h1>
+      <p>How the marketplace and launcher work</p>
+    </div>
+
+    <div class="form-card" style="max-width: 720px; margin: 0 auto;">
+      <section style="margin-bottom: 2rem;">
+        <h2 style="font-size:1.15rem;margin-bottom:0.75rem;">Two tiers, one catalog</h2>
+        <p style="margin-bottom:0.75rem;color:var(--text-muted);line-height:1.6;">
+          ADev Marketplace has 2 (two) distribution tiers. Everything you upload goes to the
+          <strong>open marketplace</strong>. A small curated subset also ships in the
+          <strong>ADev Launcher</strong>.
+        </p>
+        <ul style="margin:0.75rem 0 0 1.25rem;line-height:1.8;color:var(--text-muted);">
+          <li><strong>Marketplace (open)</strong> — Anyone can upload. Anyone can download. No gate.</li>
+          <li><strong>Launcher (curated)</strong> — Hand-picked games only. Reviewed by a human.</li>
+        </ul>
+      </section>
+
+      <section style="margin-bottom: 2rem;">
+        <h2 style="font-size:1.15rem;margin-bottom:0.75rem;">Content rules</h2>
+        <p style="margin-bottom:0.75rem;color:var(--text-muted);line-height:1.6;">
+          The following are not allowed on the marketplace or the launcher. Listings that
+          violate these rules will be removed without notice.
+        </p>
+        <ul style="margin:0.75rem 0 0 1.25rem;line-height:1.8;color:var(--text-muted);">
+          <li>Malware, spyware, or anything that harms the user's machine.</li>
+          <li>Stolen assets or games you do not have the rights to distribute.</li>
+          <li>Sexual content involving minors, hate speech, or harassment.</li>
+          <li>Phishing, scams, or misleading download links.</li>
+          <li>Cryptocurrency miners, coin-drops, or hidden background processes.</li>
+        </ul>
+        <p style="margin-top:0.75rem;color:var(--text-muted);line-height:1.6;">
+          Mature content (violence, horror, mild language) is allowed on the marketplace
+          but must be described accurately on the game page. The launcher applies a
+          stricter bar.
+        </p>
+      </section>
+
+      <section style="margin-bottom: 2rem;">
+        <h2 style="font-size:1.15rem;margin-bottom:0.75rem;">Getting into the launcher</h2>
+        <p style="margin-bottom:0.75rem;color:var(--text-muted);line-height:1.6;">
+          The launcher only features games that have proven themselves on the marketplace.
+          We look for:
+        </p>
+        <ul style="margin:0.75rem 0 0 1.25rem;line-height:1.8;color:var(--text-muted);">
+          <li>At least <strong>40 downloads</strong>, <strong>10+ reviews</strong> averaging 4 or higher.</li>
+          <li>At least <strong>2 (two) weeks</strong> live on the marketplace.</li>
+          <li>Builds that don't crash on a clean install.</li>
+          <li>A working cover image, accurate description, and version number.</li>
+        </ul>
+        <p style="margin-top:0.75rem;color:var(--text-muted);line-height:1.6;">
+          If your game meets the bar, post it on the marketplace and open an issue on the
+          launcher repository. If it doesn't yet, keep promoting it — the marketplace stays
+          open to everyone, and we re-check regularly.
+        </p>
+      </section>
+
+      <section style="margin-bottom: 2rem;">
+        <h2 style="font-size:1.15rem;margin-bottom:0.75rem;">Updates and removals</h2>
+        <p style="margin-bottom:0.75rem;color:var(--text-muted);line-height:1.6;">
+          When you update a game on the marketplace, the new build goes live immediately.
+          Launcher builds are pinned to the version that was reviewed — if you push a
+          broken update, the launcher keeps serving the last approved version until the
+          new build is re-reviewed.
+        </p>
+        <p style="color:var(--text-muted);line-height:1.6;">
+          You can delete your own game at any time from the game page. If it was in the
+          launcher, we'll pull it from the launcher index on the next update.
+        </p>
+      </section>
+
+      <section>
+        <h2 style="font-size:1.15rem;margin-bottom:0.75rem;">Reporting</h2>
+        <p style="color:var(--text-muted);line-height:1.6;">
+          Found a game that violates these rules? Report it <a href="https://tally.so/r/yPQKb0">here</a> Reports are reviewed within a
+          few days.
+        </p>
+      </section>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <p>© 2026 ADev Marketplace. Built for indie creators.</p>
+      <p class="footer-note">Want the Launcher? Get it <a href="https://adev-studios.github.io/adev-launcher/">here</a> · See our <a href="policy.html">Policy</a></p>
+    </div>
+  </footer>
+
+  <div id="auth-modal" class="modal hidden" role="dialog" aria-modal="true">
+    <div class="modal-backdrop" data-close-modal></div>
+    <div class="modal-content">
+      <button class="modal-close" data-close-modal aria-label="Close">×</button>
+      <div class="modal-tabs">
+        <button class="tab active" data-tab="login">Sign In</button>
+        <button class="tab" data-tab="signup">Sign Up</button>
+      </div>
+      <form id="form-login" class="auth-form">
+        <h2>Welcome back</h2>
+        <label>Email <input type="email" name="email" required autocomplete="email" /></label>
+        <label>Password <input type="password" name="password" required autocomplete="current-password" minlength="6" /></label>
+        <p id="login-error" class="form-error hidden"></p>
+        <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+        <div class="divider"><span>or</span></div>
+        <button type="button" id="btn-google-login" class="btn btn-google btn-block">Continue with Google</button>
+      </form>
+      <form id="form-signup" class="auth-form hidden">
+        <h2>Create account</h2>
+        <label>Display name <input type="text" name="displayName" required maxlength="40" autocomplete="nickname" /></label>
+        <label>Email <input type="email" name="email" required autocomplete="email" /></label>
+        <label>Password <input type="password" name="password" required autocomplete="new-password" minlength="6" /></label>
+        <p id="signup-error" class="form-error hidden"></p>
+        <button type="submit" class="btn btn-primary btn-block">Sign Up</button>
+        <div class="divider"><span>or</span></div>
+        <button type="button" id="btn-google-signup" class="btn btn-google btn-block">Continue with Google</button>
+      </form>
+    </div>
+  </div>
+  <div id="toast-container" class="toast-container"></div>
+
+  <script type="module">
+import { initShared } from "./js/shared.js";
+await initShared();
+  </script>
+</body>
+</html>
